@@ -1,0 +1,573 @@
+---
+title: "FDA project"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(fda)
+library(fda.usc)
+```
+
+```{r}
+df <- read.csv("/Users/gintareklim/Downloads/temperature.csv")
+```
+
+```{r}
+head(df)
+```
+
+```{r}
+# converting temperature from kelvin to celcius
+
+convert_kelvin_to_celsius <- function(temp) 
+  {
+  celsius <- round(temp - 273.15, 2)
+  return(celsius)
+  }
+```
+
+```{r}
+colnames(df)
+```
+
+```{r}
+df$Vancouver <- convert_kelvin_to_celsius(df$Vancouver)
+df$Portland <- convert_kelvin_to_celsius(df$Portland)
+df$San.Francisco <- convert_kelvin_to_celsius(df$San.Francisco)
+df$Seattle <- convert_kelvin_to_celsius(df$Seattle)
+df$Los.Angeles <- convert_kelvin_to_celsius(df$Los.Angeles)
+df$San.Diego <- convert_kelvin_to_celsius(df$San.Diego)
+df$Las.Vegas <- convert_kelvin_to_celsius(df$Las.Vegas)
+df$Phoenix <- convert_kelvin_to_celsius(df$Phoenix)
+df$Albuquerque <- convert_kelvin_to_celsius(df$Albuquerque)
+df$Denver <- convert_kelvin_to_celsius(df$Denver)
+df$San.Antonio <- convert_kelvin_to_celsius(df$San.Antonio)
+df$Dallas <- convert_kelvin_to_celsius(df$Dallas)
+df$Houston <- convert_kelvin_to_celsius(df$Houston)
+df$Kansas.City <- convert_kelvin_to_celsius(df$Kansas.City)
+df$Minneapolis <- convert_kelvin_to_celsius(df$Minneapolis)
+df$Saint.Louis <- convert_kelvin_to_celsius(df$Saint.Louis)
+df$Chicago <- convert_kelvin_to_celsius(df$Chicago)
+df$Nashville <- convert_kelvin_to_celsius(df$Nashville)
+df$Indianapolis <- convert_kelvin_to_celsius(df$Indianapolis)
+df$Atlanta <- convert_kelvin_to_celsius(df$Atlanta)
+df$Detroit <- convert_kelvin_to_celsius(df$Detroit)
+df$Jacksonville <- convert_kelvin_to_celsius(df$Jacksonville)
+df$Charlotte <- convert_kelvin_to_celsius(df$Charlotte)
+df$Miami <- convert_kelvin_to_celsius(df$Miami)
+df$Pittsburgh <- convert_kelvin_to_celsius(df$Pittsburgh)
+df$Toronto <- convert_kelvin_to_celsius(df$Toronto)
+df$Philadelphia <- convert_kelvin_to_celsius(df$Philadelphia)
+df$New.York <- convert_kelvin_to_celsius(df$New.York)
+df$Montreal <- convert_kelvin_to_celsius(df$Montreal)
+df$Boston <- convert_kelvin_to_celsius(df$Boston)
+df$Beersheba <-convert_kelvin_to_celsius(df$Beersheba)
+df$Tel.Aviv.District <- convert_kelvin_to_celsius(df$Tel.Aviv.District)
+df$Eilat <- convert_kelvin_to_celsius(df$Eilat)
+df$Haifa <- convert_kelvin_to_celsius(df$Haifa)
+df$Nahariyya <- convert_kelvin_to_celsius(df$Nahariyya)
+df$Jerusalem <- convert_kelvin_to_celsius(df$Jerusalem)
+```
+
+```{r}
+#temperatures converted to from Kelvin to Celcius
+head(df)
+```
+
+```{r}
+#removing first row, since only one city (Eilat) has temperature
+df=df[-1,]
+```
+
+```{r}
+# creating day, month and year columns from column datetime
+
+str(df)
+#datetime is a string
+```
+```{r}
+#converted from string to data type
+df$date <- as.Date(df$datetime, "%Y-%m-%d %H:%M:%S")
+str(df$date)
+```
+
+```{r}
+df$year <- format(as.Date(df$date, format="%Y-%m-%d"),"%Y")
+df$month <- format(as.Date(df$date, format="%Y-%m-%d"),"%m")
+df$year_month <- format(as.Date(df$date, format="%Y-%m-%d"),"%Y-%m")
+```
+
+```{r}
+summary(df)
+```
+
+```{r}
+dim(df)
+```
+
+```{r}
+# aggregating to monthly data
+
+monthly1 <- plyr::ddply(df, "year_month", summarise, 
+                           Vancouver = round(mean(Vancouver),2))
+
+monthly2 <- plyr::ddply(df, "year_month", summarise, 
+                        Portland = round(mean(Portland),2))
+
+monthly3 <- plyr::ddply(df, "year_month", summarise, 
+                        San.Francisco = round(mean(San.Francisco),2))
+
+monthly4 <- plyr::ddply(df, "year_month", summarise, 
+                        Seattle = round(mean(Seattle),2))
+
+monthly5 <- plyr::ddply(df, "year_month", summarise, 
+                        Los.Angeles = round(mean(Los.Angeles),2))
+
+monthly6 <- plyr::ddply(df, "year_month", summarise, 
+                        San.Diego = round(mean(San.Diego),2))
+
+monthly7 <- plyr::ddply(df, "year_month", summarise, 
+                        Las.Vegas = round(mean(Las.Vegas),2))
+
+monthly8 <- plyr::ddply(df, "year_month", summarise, 
+                        Phoenix = round(mean(Phoenix),2))
+
+monthly9 <- plyr::ddply(df, "year_month", summarise, 
+                        Albuquerque = round(mean(Albuquerque),2))
+
+monthly10 <- plyr::ddply(df, "year_month", summarise, 
+                        Denver = round(mean(Denver),2))
+
+monthly11 <- plyr::ddply(df, "year_month", summarise, 
+                       San.Antonio = round(mean(San.Antonio),2))
+
+monthly12 <- plyr::ddply(df, "year_month", summarise, 
+                         Dallas = round(mean(Dallas),2))
+
+monthly13 <- plyr::ddply(df, "year_month", summarise, 
+                        Houston = round(mean(Houston),2))
+
+monthly14 <- plyr::ddply(df, "year_month", summarise, 
+                        Kansas.City = round(mean(Kansas.City),2))
+
+monthly15 <- plyr::ddply(df, "year_month", summarise, 
+                        Minneapolis = round(mean(Minneapolis),2))
+
+monthly16 <- plyr::ddply(df, "year_month", summarise, 
+                        Saint.Louis = round(mean(Saint.Louis),2))
+
+monthly17 <- plyr::ddply(df, "year_month", summarise, 
+                        Chicago = round(mean(Chicago),2))
+
+monthly18 <- plyr::ddply(df, "year_month", summarise, 
+                        Nashville = round(mean(Nashville),2))
+
+monthly19 <- plyr::ddply(df, "year_month", summarise, 
+                         Indianapolis = round(mean(Indianapolis),2))
+
+monthly20 <- plyr::ddply(df, "year_month", summarise, 
+                         Atlanta = round(mean(Atlanta),2))
+
+monthly21 <- plyr::ddply(df, "year_month", summarise, 
+                         Saint.Louis = round(mean(Saint.Louis),2))
+
+monthly22 <- plyr::ddply(df, "year_month", summarise, 
+                         Detroit = round(mean(Detroit),2))
+
+monthly23 <- plyr::ddply(df, "year_month", summarise, 
+                         Jacksonville = round(mean(Jacksonville),2))
+
+monthly24 <- plyr::ddply(df, "year_month", summarise, 
+                         Charlotte = round(mean(Charlotte),2))
+
+monthly25 <- plyr::ddply(df, "year_month", summarise, 
+                         Miami = round(mean(Miami),2))
+
+monthly26 <- plyr::ddply(df, "year_month", summarise, 
+                         Pittsburgh = round(mean(Pittsburgh),2))
+
+monthly27 <- plyr::ddply(df, "year_month", summarise, 
+                         Torronto = round(mean(Toronto),2))
+
+monthly28 <- plyr::ddply(df, "year_month", summarise, 
+                         Philadelphia = round(mean(Philadelphia),2))
+
+monthly29 <- plyr::ddply(df, "year_month", summarise, 
+                         New.York = round(mean(New.York),2))
+
+monthly30 <- plyr::ddply(df, "year_month", summarise, 
+                         Montreal = round(mean(Montreal),2))
+
+monthly31 <- plyr::ddply(df, "year_month", summarise, 
+                         Boston = round(mean(Boston),2))
+
+monthly30 <- plyr::ddply(df, "year_month", summarise, 
+                         Beersheba = round(mean(Beersheba),2))
+
+monthly31 <- plyr::ddply(df, "year_month", summarise, 
+                         Tel.Aviv.District = round(mean(Tel.Aviv.District),2))
+
+monthly32 <- plyr::ddply(df, "year_month", summarise, 
+                         Eilat = round(mean(Eilat),2))
+
+monthly33 <- plyr::ddply(df, "year_month", summarise, 
+                         Haifa = round(mean(Haifa),2))
+
+monthly34 <- plyr::ddply(df, "year_month", summarise, 
+                         Nahariyya = round(mean(Nahariyya),2))
+
+monthly35 <- plyr::ddply(df, "year_month", summarise, 
+                         Jerusalem = round(mean(Jerusalem),2))
+```
+
+
+```{r}
+sum(is.na(df$Vancouver)) #794 missing values
+```
+
+```{r}
+# merging dataframes
+
+month_avg <- Reduce(function(x, y) merge(x, y, all=TRUE),
+       list(monthly1, monthly2, monthly3, monthly4, monthly5,
+        monthly6, monthly7, monthly8, monthly9, monthly10,
+        monthly11, monthly12, monthly13, monthly14, 
+        monthly15, monthly16, monthly17, monthly18,
+        monthly19, monthly20, monthly21, monthly22,
+        monthly23, monthly24, monthly25, monthly26,
+        monthly27, monthly28, monthly29, monthly30, 
+        monthly31, monthly32, monthly33, monthly34, 
+        monthly35)
+       )
+```
+
+```{r}
+str(month_avg)
+```
+
+```{r}
+library(zoo)
+```
+```{r}
+#adding year column
+month_avg$year <- format(as.Date(as.yearmon(month_avg$year_month)), "%Y")
+#ading month column
+month_avg$month <- format(as.Date(as.yearmon(month_avg$year_month)), "%m")
+```
+
+```{r}
+#temperature over years 
+
+ggplot(month_avg, aes(x=month, y=Vancouver, color=as.factor(year))) +
+  geom_line(na.rm=TRUE)+geom_point(na.rm=TRUE)+
+  labs(title = "Monthly temperature in Vancouver over years", x = "Date", y = "Temperature C",
+       color = "Year")
+```
+
+```{r}
+ggplot(df, aes(x=date, y=Vancouver, color=as.factor(year))) +
+  geom_point(na.rm=TRUE)+
+  labs(title = "Hourly temperature in Vancouver over years", x = "Date", y = "Temperature C",
+       color = "Year")
+```
+
+```{r}
+ggplot(df, aes(x=date, y=Jerusalem, color=as.factor(year))) +
+  geom_point(na.rm=TRUE)+
+  labs(title = "Hourly temperature in Jerusalem over years", x = "Date", y = "Temperature C",
+       color = "Year")
+```
+
+```{r}
+ggplot(df, aes(x=date, y=Los.Angeles, color=as.factor(year))) +
+  geom_point(na.rm=TRUE)+
+  labs(title = "Hourly temperature in Los Angeles over years", x = "Date", y = "Temperature C",
+       color = "Year")
+```
+
+```{r}
+ggplot(df, aes(x=date, y=Toronto, color=as.factor(year))) +
+  geom_point(na.rm=TRUE)+
+  labs(title = "Hourly temperature in Toronto over years", x = "Date", y = "Temperature C",
+       color = "Year")
+```
+
+```{r}
+ggplot(df, aes(x=date, y=San.Diego, color=as.factor(year))) +
+  geom_point(na.rm=TRUE)+
+  labs(title = "Hourly temperature in San Diego over years", x = "Date", y = "Temperature C",
+       color = "Year")
+```
+
+```{r}
+#reshaping San Diego temperature
+
+#adding year column
+monthly6$year <- format(as.Date(as.yearmon(monthly6$year_month)), "%Y")
+#ading month column
+monthly6$month <- format(as.Date(as.yearmon(monthly6$year_month)), "%m")
+
+monthly6log <- monthly6 %>% mutate(log10diego = log10(San.Diego))
+
+t_sdiego <- tidyr::spread(monthly6log[,-(1:2)], key = year, value=log10diego)
+```
+
+```{r}
+# droping so columns for San Diego reshaped data
+#to prevent errors since there are nanh values
+t_sdiego$"2012" <- NULL
+t_sdiego$"2017" <- NULL
+
+```
+
+Creating FDA object
+
+Functional data objects are constructed by specifying a set of basis functions and a set of coefficients defining a linear combination of these basis functions. The B-spline basis is used for non-periodic functions. B-spline basis functions are polynomial segments jointed end-to-end at at argument values called knots, breaks or join points.
+
+```{r}
+#creating fda object
+monRng <- c(1,12)
+bspl <- create.bspline.basis(monRng, norder=12)
+Lfdobjelect = int2Lfd(12)
+monfdPar <- fdPar(bspl, Lfdobjelect, 0.32)
+plot(bspl, lwd=2)
+```
+
+Discrete observations on one or more curves and for one more more variables are fit with a set of smooth curves, each defined by an expansion in terms of selected basis functions. The fitting criterion is weighted least squares, and smoothness can be defined in terms of a roughness penalty that is specified in a variety of ways.
+
+```{r}
+monMatr <- as.matrix(t_sdiego[,-1])
+t_sdiego_fda <- smooth.basis(1:12, monMatr, monfdPar)
+plot(t_sdiego_fda)
+```
+Create a functional data object
+
+```{r}
+#create fdata object
+t_sdiego_fdata <- fdata(t_sdiego_fda$fd)
+plot(t_sdiego_fdata)
+```
+Functional data estimation via basis representation using generalized cross-validation (GCV) method with a roughness penalty.
+
+```{r}
+# optimal smoothing
+
+l <- c(0 , 2^seq(-3, 9, len = 100))
+nb <- seq(4, 12, by = 1)
+t_sdiego_param <- optim.basis(t_sdiego_fdata, lambda = l, numbasis = nb)
+plot(t_sdiego_param$fdata.est)
+```
+
+```{r}
+t_sdiego_param$gcv.opt
+t_sdiego_param$numbasis.opt
+t_sdiego_param$lambda.opt
+```
+
+Smoothing of functional data using nonparametric kernel estimation with generalized cross-validation (GCV) methods.
+
+```{r}
+t_sdiego_np <- optim.np(t_sdiego_fdata, type.S = S.NW, par.CV = list(criteria = "GCV"))
+plot(t_sdiego_np$fdata.est)
+```
+
+The Fraiman and Muniz (FM) depth. It measures the conditional quantile on all points and then integrated. The depth.FM method sorts the depths along the axis x, ie, performs a ranking of depths.
+
+```{r}
+#depth
+#non optimally smoothed data
+
+# Fraiman-Muniz Depth
+out.FM=depth.FM(t_sdiego_fdata,trim=0.1,draw=TRUE)
+```
+
+The depth.RP function implements a depth measure based on random projections.
+It builds random projections and calculates the functional depth by the Tukey method combining the information of all projections.
+
+```{r}
+out.RP=depth.RP(t_sdiego_fdata,trim=0.1,draw=TRUE)
+```
+FTS is a fast time series library which creates an fts object by specifying index and data.
+
+```{r}
+#FTS object
+
+t_sdiego_fts <- fts(x=1:12, y = monMatr, xname = "Month", yname = "Temperature C")
+plot(t_sdiego_fts, plot.type = "functions", plotlegend = TRUE)
+```
+```{r}
+plot(t_sdiego_fts, plot.type="density",plotlegend=TRUE)
+```
+
+Compute functional HDR boxplot.
+
+```{r}
+fboxplot(t_sdiego_fts, plot.type="bivariate", type="hdr", alpha=c(0.07,0.5),
+         projmethod="PCAproj")
+```
+
+Visualizing patterns of functional time series. They considered a set of curves as a two-way (p * n) data matrix, where p is the total number of covariates and n is the total number of curves.
+
+The main advantage of this dynamic plot is to visualize both column and row information of a two-way matrix simultaneously, relate the matrix to the corresponding curves, show local variations, and highlight interactions between columns and rows of a two-way matrix.
+
+```{r}
+SVDplot(t_sdiego_fts, order = 3, plot = TRUE)
+```
+
+Functional outlier detection (abnormality detection) methods.
+
+```{r}
+foutliers(t_sdiego_fts, method = "robMah")
+```
+
+The outlier detection method corresponds to the approach of Rousseeuw and Leroy (1987) using the robust Mahalanobis distance.
+
+```{r}
+foutliers(t_sdiego_fts, method = "lrt")
+```
+
+The outlier detection method corresponds to the approach of Febrero et al. (2007) using the likelihood ratio test.
+
+```{r}
+foutliers(t_sdiego_fts, method = "depth.trim")
+```
+
+The outlier detection method corresponds to the approach of Febrero et al. (2008) using the functional depth with trimmed curves.
+
+```{r}
+foutliers(t_sdiego_fts, method = "depth.pond")
+```
+
+The outlier detection method corresponds to the approach of Febrero et al. (2008) using the functional depth with all curves.
+
+```{r}
+foutliers(t_sdiego_fts, method = "HUoutliers")
+```
+
+The outlier detection method corresponds to the approach of Hyndman and Ullah (2008) using the integrated square forecast errors.
+
+FTA to FDATA
+
+```{r}
+#FTA to FDATA
+t_sdiego_fdata_fts <- fdata(t_sdiego_fts)
+class(t_sdiego_fdata_fts)
+```
+
+If formats are assigned to the "format" attributes of the data frame columns, the fdata function will apply those formats to the specified columns, and return a new, formatted data frame.
+
+```{r}
+l <- c(0 , 2^seq(-3, 9, len = 100))
+nb <- seq(4, 12, by = 1)
+t_sdiego_param <- optim.basis(t_sdiego_fdata_fts, lambda = l, numbasis = nb)
+plot(t_sdiego_param$fdata.est)
+```
+Optimization of functions using optim.basis was performed applying generalized cross-validation (GCV) method with a roughness penalty.
+
+```{r}
+t_sdiego_param$gcv.opt
+t_sdiego_param$numbasis.opt
+t_sdiego_param$lambda.opt
+```
+
+Smoothing of functional data using nonparametric kernel estimation with generalized cross-validation (GCV) methods.
+
+```{r}
+t_sdiego_np2 <- optim.np(t_sdiego_fdata_fts, type.S = S.NW, par.CV = list(criteria = "GCV"))
+plot(t_sdiego_np2$fdata.est)
+```
+
+```{r}
+t_sdiego_np2$gcv.opt
+```
+
+```{r}
+timerange <- seq(1, 12, length=301)
+```
+
+Time series
+
+```{r}
+#converting fdata class object into fd class object
+t_sdiego1_fd <- fdata2fd(t_sdiego_param$fdata.est)
+
+#estimation
+t_sdiego1_eval <- predict(t_sdiego1_fd, timerange)
+
+t_sdiego2_fd <- fdata2fd(t_sdiego_np2$fdata.est)
+
+t_sdgiego2_eval <- predict(t_sdiego2_fd, timerange)
+
+t_sdiego1_fts <- fts(x=timerange, y = t_sdiego1_eval, xname = "Month", yname = "Temperature C")
+
+#ploting time series
+plot(t_sdiego1_fts, plot.type = "functions", plotlegend = TRUE)
+```
+
+```{r}
+plot(t_sdiego1_fts, plot.type="density",plotlegend=TRUE)
+```
+#Principal component score
+```{r}
+fboxplot(t_sdiego1_fts, plot.type="bivariate", type="bag", projmethod = "PCAproj")
+```
+
+```{r}
+fboxplot(t_sdiego1_fts, plot.type = "functional", type = "bag", projmethod = "PCAproj")
+
+```
+
+```{r}
+fboxplot(t_sdiego1_fts, plot.type="bivariate", type="hdr", alpha=c(0.07,0.5),
+         projmethod="PCAproj")
+```
+
+Visualizing patterns of functional time series. 
+
+```{r}
+SVDplot(t_sdiego1_fts, order = 3, plot = TRUE)
+```
+
+```{r}
+t_sdiego2_fts <- fts(x=timerange, y = t_sdgiego2_eval, xname = "Month", yname = "Temperature C")
+par(mfrow=c(1,1))
+plot(t_sdiego2_fts, plot.type = "functions", plotlegend = TRUE)
+```
+```{r}
+plot(t_sdiego2_fts, plot.type="depth",plotlegend=TRUE)
+```
+```{r}
+plot(t_sdiego2_fts, plot.type="density",plotlegend=TRUE)
+```
+
+```{r}
+fboxplot(t_sdiego2_fts, plot.type="bivariate", type="bag", projmethod = "PCAproj")
+```
+
+```{r}
+fboxplot(t_sdiego2_fts, plot.type = "functional", type = "bag", projmethod = "PCAproj")
+```
+
+```{r}
+fboxplot(t_sdiego2_fts, plot.type="bivariate", type="hdr", alpha=c(0.07,0.5),
+         projmethod="PCAproj")
+```
+
+```{r}
+par(mar = rep(2, 4))
+SVDplot(t_sdiego2_fts, order = 3, plot = TRUE)
+```
+
+```{r}
+foutliers(t_sdiego1_fts, method = "robMah")
+```
+
+```{r}
+foutliers(t_sdiego2_fts, method = "robMah")
+```
+
